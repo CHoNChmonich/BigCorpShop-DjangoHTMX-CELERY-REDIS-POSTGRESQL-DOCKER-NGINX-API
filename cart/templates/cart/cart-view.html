@@ -1,28 +1,32 @@
 {% include "base.html" %} {% load static %} {% load mathfilters %} {% block content %}
-
 <main class="pt-5">
   <div class="container">
     <h1 class="h5">Shopping cart</h1>
-
     <hr />
-
     {% for item in cart %}
     {% with product=item.product %}
 
-
-
-
     <br />
-
     <div class="row mb-4 border product-item">
       <div class="col-md-3 col-lg-2 order-md-first bg-light">
         <img
           class="img-fluid mx-auto d-block"
           width="200px"
           alt="Responsive image"
-          src="{{product.image.url}}"
+          src="{{product.full_image_url}}"
         />
       </div>
+
+
+
+
+
+
+
+
+        Expand All
+
+    @@ -36,7 +36,12 @@ <h1 class="h5 pt-2">{{product.title}}</h1>
 
       <div class="col-md-9 col-lg-10 ps-md-3 ps-lg-10">
         <a
@@ -31,40 +35,46 @@
         >
           <h1 class="h5 pt-2">{{product.title}}</h1>
         </a>
-
         <div class="border">
           <div class="col border-bottom">
             <div class="row p-3">
               <div class="col-6">Product</div>
 
               <div class="col-6 text-end">
-                <span class="h6 fw-bold">$ {{ product.price|mul:item.qty}}</span>
+                {%if product.discount%}
+                <span class="text-decoration-line-through fw-bold text-danger">$ {{product.price|mul:item.qty}}</span>
+                <span class="h6 fw-bold">$ {{product.get_discounted_price|mul:item.qty}}</span>
+                {% else%}
+                <span class="h6 fw-bold">$ {{product.price|mul:item.qty}}</span>
+                {% endif%}
               </div>
             </div>
           </div>
+
+
+
+
+
+
+
+          Expand Down
+
+
 
           <div class="col">
             <div class="row p-3">
               <div class="col-12">
                 <label for="select">Qty</label>
-
                 &nbsp;
-
                 <select id="select{{product.id}}">
                   <option selected>{{item.qty}}</option>
-
                   <option value="">1</option>
-
                   <option value="">2</option>
-
                   <option value="">3</option>
-
                   <option value="">4</option>
                 </select>
-
                 <br />
                 <br />
-
                 <button
                   type="button"
                   data-index="{{product.id}}"
@@ -72,9 +82,7 @@
                 >
                   Update
                 </button>
-
                 &nbsp;
-
                 <button
                   type="button"
                   class="btn btn-danger btn-sm delete-button"
@@ -82,13 +90,19 @@
                 >
                   Delete
                 </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
 
+              </div>
+
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
     {% endwith %}
     {% endfor %}
 
@@ -108,16 +122,12 @@
                 </button>
     </div>
   </div>
-
   <br />
   <br />
 </main>
-
 <script>
-
     $(document).on('click', '.delete-button', function(e){
         e.preventDefault();
-
         $.ajax({
             type: 'POST',
             url: '{% url "cart:delete-to-cart" %}',
@@ -129,7 +139,6 @@
             success: function(response){
                 document.getElementById('lblCartCount').textContent = response.qty
                 document.getElementById('total').textContent = response.total
-
                 location.reload()
             },
             error: function(error, status){
@@ -137,12 +146,9 @@
             }
         })
     });
-
     $(document).on('click', '.update-button', function(e){
         e.preventDefault();
-
         var product_id = $(this).data('index')
-
         $.ajax({
             type: 'POST',
             url: '{% url "cart:update-to-cart" %}',
@@ -155,7 +161,6 @@
             success: function(response){
                 document.getElementById('lblCartCount').textContent = response.qty
                 document.getElementById('total').textContent = response.total
-
                 location.reload()
             },
             error: function(error, status){
@@ -164,10 +169,5 @@
         })
     });
 
-
-
-
-
 </script>
-
 {% endblock %}

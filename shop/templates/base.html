@@ -294,8 +294,11 @@
         </div>
       </div>
     </nav>
-
+{% include 'shop/_partials/_messages.html' %}
     {% block content %}
     {% endblock %}
+  {% include 'shop/_partials/_footer.html' %}
   </body>
+  <script src="{% static 'shop/js/base.js' %}" ></script>
+<script src="https://unpkg.com/htmx.org@1.9.9" integrity="sha384-QFjmbokDn2DjBjq+fM+8LUIVrAgqcNW2s0PjAxHETgRn9l4fvX31ZxDxvwQnyMOX" crossorigin="anonymous"></script>
 </html>
