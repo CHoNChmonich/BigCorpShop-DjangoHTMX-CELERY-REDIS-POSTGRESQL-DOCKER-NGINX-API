@@ -1,3 +1,4 @@
+from datetime import timedelta
 from pathlib import Path
 import environ
 from django.contrib import messages
@@ -14,7 +15,7 @@ SECRET_KEY = 'django-insecure-hcn+ky305j3-n4**le%x6d%p8!4-p9vqr0zhls5#lqv%a2qxw9
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -36,6 +37,9 @@ INSTALLED_APPS = [
     'django_celery_beat',
     'django_celery_results',
     "django_htmx",
+    'rest_framework',
+    'djoser',
+    'drf_yasg',
 
 
     'shop.apps.ShopConfig',
@@ -43,6 +47,7 @@ INSTALLED_APPS = [
     'account',
     'payment',
     'recommend',
+    'api',
 ]
 
 MIDDLEWARE = [
@@ -208,10 +213,34 @@ CELERY_RESULT_BACKEND = 'django-db'
 CELERY_RESULT_EXTENDED = True
 CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers.DatabaseScheduler'
-
 # CELERY_BEAT_SCHEDULE = {
 #     "sample_task": {
 #         "task": "core.tasks.sample_task",
 #         "schedule": crontab(minute="*/1"),
 #     },
 # }
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    "DEFAULT_PERMISSION_CLASSES": [
+        "api.permissions.IsAdminOrReadOnly",
+    ],
+    "PAGE_SIZE": 15,
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+}
+
+DJOSER = {
+    "LOGIN_FIELD": "email",
+    "SERIALIZERS": {
+        "user_create": "api.serializers.CustomUserCreateSerializer",
+    },
+    'AUTH_HEADER_TYPES': ('JWT',),
+
+}

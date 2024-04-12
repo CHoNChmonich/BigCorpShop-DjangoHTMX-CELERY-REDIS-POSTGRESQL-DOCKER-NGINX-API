@@ -49,17 +49,6 @@
                                 href="{{obj.get_absolute_url}}">{{obj.name|upper}}</a>
                             <ul class="dropdown-menu">
                                 {% for subobj in obj.children.all %} {% if not subobj.children.all %}
-
-
-
-
-
-
-
-          Expand Down
-
-
-
                                 <li>
                                     <a class="dropdown-item"
                                         href="{{subobj.get_absolute_url}}">{{subobj.name|upper}}</a>
